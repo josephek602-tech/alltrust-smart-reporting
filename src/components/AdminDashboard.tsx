@@ -89,7 +89,7 @@ export default function AdminDashboard() {
   const [logStaffName, setLogStaffName] = useState('');
   const [logDetailsText, setLogDetailsText] = useState('');
   const [logFinancialImpact, setLogFinancialImpact] = useState<number>(0);
-  const [logSeverity, setLogSeverity] = useState<'Low' | 'Medium' | 'High'>('Low');
+  const [logSeverity, setLogSeverity] = useState<'Low' | 'Medium' | 'High' | 'Minor' | 'Major' | 'Critical'>('Low');
   const [logCategory, setLogCategory] = useState<string>('');
   const [logFormError, setLogFormError] = useState('');
   const [logFormSuccess, setLogFormSuccess] = useState(false);

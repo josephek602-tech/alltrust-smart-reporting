@@ -597,7 +597,7 @@ export default function LogSheets({ currentUser, logs, onLogUpdated }: LogSheets
                       <textarea
                         rows={3}
                         value={resolutionNotes}
-                        onChange={(e) => setNewStatus(e.target.value as any) || setResolutionNotes(e.target.value)}
+                        onChange={(e) => setResolutionNotes(e.target.value)}
                         placeholder="e.g. Discussed with staff. Sales Associate has re-invoiced correctly. Issue closed."
                         className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
