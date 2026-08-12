@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user is the Admin
+    function isAdmin() {
+      return isAuthenticated() && request.auth.uid == "8jCULC5vGBey4j7gNgZ4FwXRas63";
+    }
+
+    // Check if user owns the account document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Check if user has management privileges based on Firestore profile
+    function isManagement() {
+      return isAuthenticated() && (
+        isAdmin() ||
+        (
+          exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+          (
+            get(/databases/$(database)/documents/users/$(request.auth.uid)).data.department == "MANAGEMENT" ||
+            get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "CEO" ||
+            get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "Pharmacist" ||
+            get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "Supervisor"
+          )
+        )
+      );
+    }
+
+    // User profiles rules
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    // Log sheets rules
+    match /logs/{logId} {
+      // Anyone authenticated can create a log
+      allow create: if isAuthenticated() && (request.resource.data.loggedBy == request.auth.uid || isManagement());
+      
+      // Users can read, update or delete their own logs, or Management/Admin can access everything
+      allow read, update, delete: if isAuthenticated() && (
+        resource.data.loggedBy == request.auth.uid ||
+        isManagement()
+      );
+    }
+
+    // Online customer order logs rules
+    match /online_orders/{orderId} {
+      // Authenticated staff can read all online orders (for team leaderboards & tracking)
+      allow read: if isAuthenticated();
+      // Authenticated staff can create an order log
+      allow create: if isAuthenticated();
+      // Users can update/delete their own logged orders, or Management/Admin can update/delete any order
+      allow update, delete: if isAuthenticated() && (
+        resource.data.loggedBy == request.auth.uid ||
+        isManagement()
+      );
+    }
+  }
+}

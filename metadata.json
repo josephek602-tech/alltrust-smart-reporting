@@ -1,0 +1,8 @@
+{
+  "name": "Alltrust Smart Reporting1",
+  "description": "An optimized reporting system for AllTrust to track Sales Invoice errors, customer complaints, picker mistakes, and agent offenses with real-time analytics dashboards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

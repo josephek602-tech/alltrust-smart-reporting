@@ -1,0 +1,92 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User account and profile details inside Alltrust",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "department": { "type": "string", "enum": ["SALES", "MANAGEMENT"] },
+        "role": { "type": "string", "enum": ["Sales Associate", "Sales Assistant/Picker", "Confirmation Team", "Customer Care", "CEO", "Pharmacist", "Supervisor"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "fullName", "email", "department", "role", "createdAt"]
+    },
+    "Log": {
+      "title": "Log",
+      "description": "Reporting logs for sales errors, picker errors, complaints, care offenses, and confirmation errors",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "logType": { "type": "string", "enum": ["sales_invoice_error", "customer_complaint", "picker_error", "customer_care_offense", "confirmation_error"] },
+        "loggedBy": { "type": "string" },
+        "loggedByName": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "department": { "type": "string" },
+        "status": { "type": "string", "enum": ["Pending", "Resolved", "Investigating"] },
+        "resolvedAt": { "type": "string" },
+        "notes": { "type": "string" },
+        "salesAssociate": { "type": "string" },
+        "invoiceNumber": { "type": "string" },
+        "errorDescription": { "type": "string" },
+        "financialImpact": { "type": "number" },
+        "errorType": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "complaintDetails": { "type": "string" },
+        "severity": { "type": "string", "enum": ["Low", "Medium", "High", "Minor", "Major", "Critical"] },
+        "category": { "type": "string" },
+        "responsibleStaff": { "type": "string" },
+        "pickerName": { "type": "string" },
+        "orderId": { "type": "string" },
+        "errorDetails": { "type": "string" },
+        "errorCategory": { "type": "string" },
+        "agentName": { "type": "string" },
+        "offenseDetails": { "type": "string" },
+        "offenseType": { "type": "string" },
+        "confirmationStaffName": { "type": "string" },
+        "invoiceOrOrderId": { "type": "string" }
+      },
+      "required": ["id", "logType", "loggedBy", "loggedByName", "createdAt", "status"]
+    },
+    "OnlineOrder": {
+      "title": "OnlineOrder",
+      "description": "Log of online customer orders handled by staff, tracking processing times, invoicers, and out-of-stock items",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "loggedBy": { "type": "string" },
+        "loggedByName": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "staffName": { "type": "string" },
+        "customerName": { "type": "string" },
+        "startTime": { "type": "string" },
+        "finishTime": { "type": "string" },
+        "invoiceNumber": { "type": "string" },
+        "invoicerName": { "type": "string" },
+        "outOfStockItems": { "type": "string" },
+        "durationMinutes": { "type": "number" },
+        "status": { "type": "string", "enum": ["In Progress", "Completed", "Pending", "Cancelled"] },
+        "notes": { "type": "string" },
+        "channel": { "type": "string" }
+      },
+      "required": ["id", "loggedBy", "loggedByName", "createdAt", "staffName", "customerName", "invoiceNumber", "invoicerName"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles keyed by Auth UID"
+    },
+    "/logs/{logId}": {
+      "schema": "Log",
+      "description": "Reporting logs stored in a unified queryable collection"
+    },
+    "/online_orders/{orderId}": {
+      "schema": "OnlineOrder",
+      "description": "Online customer order logs tracked per staff and invoicer"
+    }
+  }
+}
